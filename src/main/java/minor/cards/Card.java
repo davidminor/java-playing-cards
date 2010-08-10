@@ -106,13 +106,26 @@ public class Card implements Comparable<Card> {
     if (this == card)
       return 0;
 
-    int comp = suit.compareTo(card.getSuit());
+    int comp = rank.compareTo(card.getRank());
     if (comp != 0)
       return comp;
 
-    return rank.compareTo(card.getRank());
+    return suit.compareTo(card.getSuit());
   }
 
+  public static final ACE_HIGH_COMPARATOR = new Comparator<Card> {
+	public int compare(Card card1, Card card2) {
+	  if (card1 == card2)
+	    return 0;
+	  
+	  int comp = rank.ACE_HIGH_COMPARATOR.compare(card1.getRank(), card2.getRank());
+	  if (comp != 0)
+		return comp;
+	  
+	  return card1.getSuit().compareTo(card2.getSuit());
+	}
+  }
+  
   private String name;
 
   public String toString() {
