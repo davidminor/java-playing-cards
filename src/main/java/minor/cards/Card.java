@@ -18,6 +18,8 @@ File: Card.java - basic playing card
 
 package minor.cards;
 
+import java.util.Comparator;
+
 public class Card implements Comparable<Card> {
 
   public static final Card $AC = new Card(Rank.ACE, Suit.CLUBS);
@@ -113,18 +115,18 @@ public class Card implements Comparable<Card> {
     return suit.compareTo(card.getSuit());
   }
 
-  public static final ACE_HIGH_COMPARATOR = new Comparator<Card> {
+  public static final Comparator<Card> ACE_HIGH_COMPARATOR = new Comparator<Card>() {
 	public int compare(Card card1, Card card2) {
 	  if (card1 == card2)
 	    return 0;
 	  
-	  int comp = rank.ACE_HIGH_COMPARATOR.compare(card1.getRank(), card2.getRank());
+	  int comp = Rank.ACE_HIGH_COMPARATOR.compare(card1.getRank(), card2.getRank());
 	  if (comp != 0)
 		return comp;
 	  
 	  return card1.getSuit().compareTo(card2.getSuit());
 	}
-  }
+  };
   
   private String name;
 

@@ -31,9 +31,14 @@ public class Deck implements Cloneable {
   private int [] discardIndex;
   private int maxRank;
   private int maxSuit;
+  private boolean trackDiscards;
 
-  private static class NotEnoughCardsException extends RuntimeException {
+  public static class NotEnoughCardsException extends RuntimeException {
 
+  }
+  
+  public static class DiscardsNotTrackedException extends RuntimeException {
+	  
   }
   
   private static final Deck STANDARD = new Deck(
@@ -79,8 +84,10 @@ public class Deck implements Cloneable {
       if (maxSuit < card.getSuit().getValue())
         maxSuit = card.getSuit().getValue();
     }
-    discardIndex = new int[maxRank*maxSuit];
-    Arrays.fill(discardIndex, -1);
+    if (getTrackDiscards()) {
+      discardIndex = new int[maxRank*maxSuit];
+      Arrays.fill(discardIndex, -1);
+    }
     shuffle();
   }
 
@@ -88,13 +95,15 @@ public class Deck implements Cloneable {
    * Return all the cards in the deck into play.
    */
   public final void shuffle() {
-    Card card;
-    //return discard array to initial state
-    for(int index = cards.length - 1; index > cardIndex; index--) {
-      card = cards[index];
-      discardIndex[card.getSuit().getValue()-1 + 
-        (card.getRank().getValue()-1)*maxSuit] = -1;
-    }
+	if (getTrackDiscards()) {
+      Card card;
+      //return discard array to initial state
+      for(int index = cards.length - 1; index > cardIndex; index--) {
+        card = cards[index];
+        discardIndex[card.getSuit().getValue()-1 + 
+          (card.getRank().getValue()-1)*maxSuit] = -1;
+      }
+	}
     //put all cards into play
     cardIndex = cards.length - 1;
   }
@@ -117,9 +126,11 @@ public class Deck implements Cloneable {
     int rand = getRandomInt(cardIndex);
     Card temp = cards[rand];
 
-    //keep track of the dealt card for discards later on
-    discardIndex[temp.getSuit().getValue()-1 + 
-      (temp.getRank().getValue()-1)*maxSuit] = cardIndex;
+    if (getTrackDiscards()) {
+      //keep track of the dealt card for discards later on
+      discardIndex[temp.getSuit().getValue()-1 + 
+        (temp.getRank().getValue()-1)*maxSuit] = cardIndex;
+    }
     cards[rand] = cards[cardIndex];
     cards[cardIndex--] = temp;
     return temp;
@@ -147,9 +158,11 @@ public class Deck implements Cloneable {
       rand = getRandomInt(cardIndex);
       temp = cards[rand];
 
-      //keep track of the dealt card for discards later on
-      discardIndex[temp.getSuit().getValue()-1 + 
-        (temp.getRank().getValue()-1)*maxSuit] = cardIndex;
+      if (getTrackDiscards()) {
+        //keep track of the dealt card for discards later on
+        discardIndex[temp.getSuit().getValue()-1 + 
+          (temp.getRank().getValue()-1)*maxSuit] = cardIndex;
+      }
       cards[rand] = cards[cardIndex];
       cards[cardIndex--] = temp;
     }
@@ -162,7 +175,10 @@ public class Deck implements Cloneable {
   /**
    * Return a card back into play.
    */
-  public void discard(Card card) {
+  public void discard(Card card) throws DiscardsNotTrackedException {
+    if (!getTrackDiscards())
+      throw new DiscardsNotTrackedException();
+    
     int discard = card.getSuit().getValue()-1 + 
       (card.getRank().getValue()-1)*maxSuit;
     int index = discardIndex[discard];
@@ -184,7 +200,7 @@ public class Deck implements Cloneable {
   /**
    * Return cards back into play.
    */
-  public void discard(Card [] discards) {
+  public void discard(Card ... discards) {
     for(Card card : discards)
       discard(card);
   }
@@ -235,5 +251,24 @@ public class Deck implements Cloneable {
    */
   public void setRandom(Random random) {
     this.random = random;
+  }
+  
+  /**
+   * Whether or not discards are being tracked.
+   */
+  public boolean getTrackDiscards() {
+	  return trackDiscards;
+  }
+  
+  /**
+   * Whether or not to track discards.
+   */
+  public void setTrackDiscards(final boolean track) {
+    trackDiscards = track;
+    if (getTrackDiscards()) {
+      if (discardIndex == null)
+        discardIndex = new int[maxRank*maxSuit];
+      Arrays.fill(discardIndex, -1);
+    }
   }
 }
