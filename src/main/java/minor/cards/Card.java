@@ -80,13 +80,129 @@ public class Card implements Comparable<Card> {
 
   /**
    * Creates a new card. Prefer the public static cards
-   * over creating new card objects.
+   * over creating new card objects. See also get().
    */
   public Card(Rank rank, Suit suit) {
     this.rank = rank;
     this.suit = suit;
   }
 
+  /**
+   * Retrieve a static instance of the card by name. E.g., "As" returns $AS. 
+   * Not case sensitive. Characters beyond the first two are ignored.
+   */
+  public static Card get(String cardName) {
+	if (cardName == null || cardName.length() < 2)
+	  return null;
+	switch (cardName.charAt(0)) {
+	case 'a': case 'A':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $AS;
+		case 'h': case 'H': return $AH;
+		case 'd': case 'D': return $AD;
+		case 'c': case 'C': return $AC;
+		}
+		break;
+	case '2':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $2S;
+		case 'h': case 'H': return $2H;
+		case 'd': case 'D': return $2D;
+		case 'c': case 'C': return $2C;
+		}
+		break;
+	case '3':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $3S;
+		case 'h': case 'H': return $3H;
+		case 'd': case 'D': return $3D;
+		case 'c': case 'C': return $3C;
+		}
+		break;
+	case '4':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $4S;
+		case 'h': case 'H': return $4H;
+		case 'd': case 'D': return $4D;
+		case 'c': case 'C': return $4C;
+		}
+		break;
+	case '5':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $5S;
+		case 'h': case 'H': return $5H;
+		case 'd': case 'D': return $5D;
+		case 'c': case 'C': return $5C;
+		}
+		break;
+	case '6':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $6S;
+		case 'h': case 'H': return $6H;
+		case 'd': case 'D': return $6D;
+		case 'c': case 'C': return $6C;
+		}
+		break;
+	case '7':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $7S;
+		case 'h': case 'H': return $7H;
+		case 'd': case 'D': return $7D;
+		case 'c': case 'C': return $7C;
+		}
+		break;
+	case '8':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $8S;
+		case 'h': case 'H': return $8H;
+		case 'd': case 'D': return $8D;
+		case 'c': case 'C': return $8C;
+		}
+		break;
+	case '9':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $9S;
+		case 'h': case 'H': return $9H;
+		case 'd': case 'D': return $9D;
+		case 'c': case 'C': return $9C;
+		}
+		break;
+	case 't': case 'T':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $TS;
+		case 'h': case 'H': return $TH;
+		case 'd': case 'D': return $TD;
+		case 'c': case 'C': return $TC;
+		}
+		break;
+	case 'j': case 'J':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $JS;
+		case 'h': case 'H': return $JH;
+		case 'd': case 'D': return $JD;
+		case 'c': case 'C': return $JC;
+		}
+		break;
+	case 'q': case 'Q':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $QS;
+		case 'h': case 'H': return $QH;
+		case 'd': case 'D': return $QD;
+		case 'c': case 'C': return $QC;
+		}
+		break;
+	case 'k': case 'K':
+		switch (cardName.charAt(1)) {
+		case 's': case 'S': return $KS;
+		case 'h': case 'H': return $KH;
+		case 'd': case 'D': return $KD;
+		case 'c': case 'C': return $KC;
+		}
+		break;
+	}
+	return null;
+  }
+  
   /**
    * Get the rank of the card.
    */
